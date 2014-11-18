@@ -125,7 +125,11 @@ end
 #	ARGV parsing
 #
 projectdir = File.expand_path File.dirname(__FILE__)	# vagrant project dir!!
-f = g = File.join(projectdir, 'vagrant.yaml')
+if folder.start_with?('/')
+       f = g = File.join(folder, 'vagrant.yaml')
+else
+       f = g = File.join(projectdir, 'vagrant.yaml')
+end
 # check for vagrant.yaml in folder subdirectory
 load_folder = false
 if File.exist?(f)
@@ -143,7 +147,11 @@ if File.exist?(f)
 	end
 
 	# if folder is '', then this doesn't do any different from the original
-	ff = File.join(projectdir, folder, 'vagrant.yaml')
+	if folder.start_with?('/')
+		ff = File.join(folder, 'vagrant.yaml')
+	else
+		ff = File.join(projectdir, folder, 'vagrant.yaml')
+	end
 	if File.exist?(ff)
 		f = ff
 	end
@@ -381,7 +389,6 @@ end
 vms = extra.concat vms
 
 folder = (folder + '/') if not(folder.end_with?('/'))	# ensure trailing slash
-folder = '' if folder.start_with?('/')	# only relative paths are allowed...
 
 # add in puppet host if requested
 if puppet
